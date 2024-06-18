@@ -1,4 +1,4 @@
-import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Put, Req, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, InternalServerErrorException, NotFoundException, Param, Put, Req, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUser } from './dtos/userUpdate.dtos';
 @Controller('user')
@@ -16,7 +16,15 @@ export class UserController {
     @Get('users/:id')
     @UseInterceptors(ClassSerializerInterceptor)
     async getUser(@Param('id') id : number){
-        return this.userService.getUser(id)
+        try {
+            const user = await this.userService.getUser(id);
+            if (!user) {
+              throw new NotFoundException(`User with ID ${id} not found`);
+            }
+            return user;
+          } catch (e) {
+            throw new InternalServerErrorException('An error occurred while fetching the user');
+          }
     }
 
     @Put('/users/:id')
