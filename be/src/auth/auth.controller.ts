@@ -1,10 +1,10 @@
-import { BadRequestException, Body, Controller, NotFoundException, Post, Res, ResponseDecoratorOptions, UseGuards } from '@nestjs/common';
-import { UserDto } from '../user/dto/register.dtos';
+import { BadRequestException, Body, ClassSerializerInterceptor, Controller, Get, NotFoundException, Post, Req, Res, ResponseDecoratorOptions, UseGuards, UseInterceptors } from '@nestjs/common';
+import { RegisterDto } from './dto/register.dtos';
 import { User } from '../user/user.model';
 import { UserService } from '../user/user.service'
 import * as bcrypt from "bcrypt"
 import { JwtService } from '@nestjs/jwt';
-import { Response } from 'express';
+import { Response , Request} from 'express';
 import { AuthGuard } from './auth.guard';
 
 @Controller()
@@ -15,7 +15,7 @@ export class AuthController {
     ){}
 
     @Post('register')
-    async register(@Body() postUser: UserDto) : Promise<User>{
+    async register(@Body() postUser: RegisterDto) : Promise<User>{
         const hashedPwd = await bcrypt.hash(postUser.password, 12) 
 
 
@@ -51,6 +51,17 @@ export class AuthController {
         return {
             message: "success"
         };
+    }
+
+    @UseInterceptors(ClassSerializerInterceptor)
+    @Get('users')
+    @UseGuards(AuthGuard)
+    async getUsers(@Req() request: Request){
+        const cookie = request.cookies['jwt']
+
+        const {id} = await this.jwtService.verifyAsync(cookie) 
+        const user = await this.userService.getUser(id)
+        return user
     }
 
     @UseGuards(AuthGuard)
