@@ -18,9 +18,9 @@ model User{
   name String 
   email String
   password String 
-  is_admin Boolean
-  Blog Blog[]
-  Comment Comment?
+  is_admin Boolean @default(false)
+  blog Blog[]
+  comment Comment[]
 }
 
 model Blog{
@@ -29,8 +29,8 @@ model Blog{
   blog String
   title String
   createdAt DateTime @default(now()) @db.Timestamp(6)
-  User User @relation(fields: [author], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Comment Comment?
+  user User @relation(fields: [author], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  comment Comment[]
 }
 
 model Comment{
@@ -39,6 +39,6 @@ model Comment{
   blogid Int @unique
   comment String
   createdAt DateTime @default(now()) @db.Timestamp(6)
-  User User @relation(fields: [author], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Blog Blog @relation(fields: [blogid] , references: [id] , onDelete: NoAction , onUpdate: NoAction)
+  user User @relation(fields: [author], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  blog Blog @relation(fields: [blogid] , references: [id] , onDelete: NoAction , onUpdate: NoAction)
 }
