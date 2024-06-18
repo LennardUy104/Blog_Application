@@ -11,6 +11,6 @@ Simple Blog Application with user authentication.
 
 # Setup
 
-1. clone repo ** git@github.com:LennardUy104/Blog_Application.git **
+1. clone repo **git@github.com:LennardUy104/Blog_Application.git**
 2. cd Blog_Application
 3. cd BE
