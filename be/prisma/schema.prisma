@@ -25,7 +25,7 @@ model User{
 
 model Blog{
   id Int @id @default(autoincrement())
-  author Int @unique
+  author Int
   blog String
   title String
   createdAt DateTime @default(now()) @db.Timestamp(6)
@@ -35,8 +35,8 @@ model Blog{
 
 model Comment{
   id Int @id @default(autoincrement())
-  author Int @unique
-  blogid Int @unique
+  author Int 
+  blogid Int 
   comment String
   createdAt DateTime @default(now()) @db.Timestamp(6)
   user User @relation(fields: [author], references: [id], onDelete: NoAction, onUpdate: NoAction)

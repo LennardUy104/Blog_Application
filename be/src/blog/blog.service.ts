@@ -21,26 +21,37 @@ export class BlogService {
 
     const { author, blog, title } = createBlogDto;
     return await this.prisma.blog.create({
-    data: {
-      author,
-      blog,
-      title,
-    },
-  });
+      data: {
+        author,
+        blog,
+        title,
+      },
+    });
   }
 
   async findAll() {
-    return await this.prisma.blog.findMany({
+    const blogs = await this.prisma.blog.findMany({
       include: {
-        user: true
+        user: true,
+        comment : true
       }
     });
+
+    return {
+      pagination: {
+        total: this.prisma.blog.count
+      } , 
+      data: blogs
+    }
   }
 
   async findOne(id: number) {
     return await this.prisma.blog.findFirst({ 
       where: { id: Number( id ) } ,
-      include: {user : true}
+      include: {
+        user : true , 
+        comment : true
+      }
     })
   }
 
