@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
 import { PrismaService } from '../prisma.service';
+import { startWith } from 'rxjs';
+import { contains } from 'class-validator';
 
 @Injectable()
 export class BlogService {
@@ -29,30 +31,46 @@ export class BlogService {
     });
   }
 
-  async findAll(page = 1) {
-    const skip = (page - 1) * 10;
-    const take = 10;
-  
-    const blogs = await this.prisma.blog.findMany({
-      skip: skip,
-      take: take,
-      include: {
-        user: true,
-        comment: true
-      }
-    });
-  
-    const totalBlogs = await this.prisma.blog.count();
-  
-    return {
-      data: blogs,
-      pagination: {
-        total: totalBlogs,
-        page: page,
-        pageSize: 10,
-        totalPages: Math.ceil(totalBlogs / 10)
-      }
-    };
+  async findAll(page = 1, author) {
+    try {
+      const skip = (page - 1) * 10;
+      const take = 10;
+
+      const where: any = !author
+          ? {}
+          : {
+          user: {
+              name: author
+          },
+      };
+
+        const blogs = await this.prisma.blog.findMany({
+            skip: skip,
+            take: take,
+            include: {
+                user: true,
+                comment: true,
+            },
+            where: where,
+        });
+
+        const totalBlogs = await this.prisma.blog.count({
+            where: where,
+        });
+
+        return {
+            data: blogs,
+            pagination: {
+                total: totalBlogs,
+                page: page,
+                pageSize: 10,
+                totalPages: Math.ceil(totalBlogs / 10),
+            },
+        };
+    } catch (error) {
+        console.error('Error fetching blogs:', error);
+        throw error;
+    }
   }
   
 

@@ -13,9 +13,9 @@ export class BlogController {
   }
 
   @Get()
-  findAll(@Query('page') page : number) {
-    return this.blogService.findAll(Number(page));
-  }
+findAll(@Query('page') page: number, @Query('author') author?: string) {
+  return this.blogService.findAll(Number(page), author || undefined);
+}
 
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -31,3 +31,4 @@ export class BlogController {
   remove(@Param('id') id: string) {
     return this.blogService.remove(+id);
   }
+}
