@@ -31,4 +31,3 @@ export class BlogController {
   remove(@Param('id') id: string) {
     return this.blogService.remove(+id);
   }
-}
