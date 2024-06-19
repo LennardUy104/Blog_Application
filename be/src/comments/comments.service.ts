@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class CommentsService {
@@ -11,7 +11,7 @@ export class CommentsService {
   async create(createCommentDto: CreateCommentDto) {
     const has_author = await this.prisma.user.findUnique({
       where: {
-        id: createCommentDto.author,
+        id: createCommentDto.authorId,
       },
     });
 
@@ -25,10 +25,10 @@ export class CommentsService {
       throw new Error('Author does not exist');
     }
 
-    const { author, blogid , comment } = createCommentDto;
+    const { authorId, blogid , comment } = createCommentDto;
     return await this.prisma.comment.create({
       data: {
-        author ,
+        authorId ,
         blogid,
         comment
       },

@@ -1,5 +1,5 @@
 export class Comment {
-    author: number;
+    authorId: number;
     blogid: number
     comment: String;
 }

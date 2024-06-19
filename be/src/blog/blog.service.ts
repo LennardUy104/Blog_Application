@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class BlogService {
@@ -11,7 +11,7 @@ export class BlogService {
   async create(createBlogDto: CreateBlogDto) {
     const has_author = await this.prisma.user.findUnique({
       where: {
-        id: createBlogDto.author,
+        id: createBlogDto.authorId,
       },
     });
 
@@ -19,31 +19,42 @@ export class BlogService {
       throw new Error('Author does not exist');
     }
 
-    const { author, blog, title } = createBlogDto;
+    const { authorId, blog, title } = createBlogDto;
     return await this.prisma.blog.create({
       data: {
-        author,
+        authorId,
         blog,
         title,
       },
     });
   }
 
-  async findAll() {
+  async findAll(page = 1) {
+    const skip = (page - 1) * 10;
+    const take = 10;
+  
     const blogs = await this.prisma.blog.findMany({
+      skip: skip,
+      take: take,
       include: {
         user: true,
-        comment : true
+        comment: true
       }
     });
-
+  
+    const totalBlogs = await this.prisma.blog.count();
+  
     return {
+      data: blogs,
       pagination: {
-        total: this.prisma.blog.count
-      } , 
-      data: blogs
-    }
+        total: totalBlogs,
+        page: page,
+        pageSize: 10,
+        totalPages: Math.ceil(totalBlogs / 10)
+      }
+    };
   }
+  
 
   async findOne(id: number) {
     return await this.prisma.blog.findFirst({ 

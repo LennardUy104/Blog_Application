@@ -3,10 +3,10 @@ import { IsNotEmpty } from "class-validator";
 
 export class CreateBlogDto {
 
-    id : number ;
+    id? : number ;
 
     @IsNotEmpty()
-    author : number;
+    authorId : number;
 
     @IsNotEmpty()
     blog : string;
