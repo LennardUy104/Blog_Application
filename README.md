@@ -18,7 +18,8 @@ Simple Blog Application with user authentication.
 1. clone repo **git@github.com:LennardUy104/Blog_Application.git**
 2. cd Blog_Application
 3. cd BE
-4. npm run start:dev
+4. npm install
+5. npm run start:dev
 
 # EndPoints
 
