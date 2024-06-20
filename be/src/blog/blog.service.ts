@@ -31,8 +31,12 @@ export class BlogService {
     });
   }
 
-  async findAll(page = 1, author) {
+  async findAll(page = 1 , author) {
     try {
+      if(!page){
+        page = 1
+      } 
+      
       const skip = (page - 1) * 10;
       const take = 10;
 

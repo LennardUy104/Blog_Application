@@ -8,6 +8,12 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('api')
   app.use(cookieParser());
-  await app.listen(3000);
+  app.enableCors({
+    origin: ['*', 'http://localhost:3000'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Custom-Header']
+  })
+  await app.listen(8000);
 }
 bootstrap();

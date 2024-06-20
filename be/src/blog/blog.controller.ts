@@ -13,7 +13,7 @@ export class BlogController {
   }
 
   @Get()
-findAll(@Query('page') page: number, @Query('author') author?: string) {
+findAll(@Query('page') page?: number, @Query('author') author?: string) {
   return this.blogService.findAll(Number(page), author || undefined);
 }
 
