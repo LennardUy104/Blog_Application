@@ -1,34 +1,37 @@
 'use client'
 import Link from 'next/link';
 import React, { useState } from 'react'
+import { redirect } from 'next/navigation'
+
+const register = () => {
+    const [name , setName] = useState('')
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState(null);
 
 
-const login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-
-
-    const clickLogin = async () => {
-    try {
-      const res = await fetch('http://localhost:8000/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (res.ok) {
-        window.location.href = '/';
-      } else {
-        const data = await res.json();
-        setError(data.error);
+    async function clickRegister() {
+        try {
+            const res = await fetch('http://localhost:8000/api/register', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password , name}),
+            });
+        
+            const data = await res.json();
+        
+            if (res.ok) {
+                window.location.href = '/users';
+            } else {
+                const data = await res.json();
+                setError(data.error);
+            }
+        } catch (error) {
+        setError(error.toString());
+        }
       }
-    } catch (error) {
-      setError(error.toString());
-    }
-  };
 
     return (
         <div>
@@ -37,8 +40,17 @@ const login = () => {
                 Error: {error}
                 </div>
             )}
-            <h1>Log In</h1>
-
+            <h1>Sign Up</h1>
+            <div className="form-floating mb-3">
+                <input
+                    type="text"
+                    className="form-control"
+                    id="floatingInput"
+                    placeholder="name"
+                    onChange={(e) => setName(e.target.value)}
+                />
+                <label htmlFor="floatingInput">Name</label>
+            </div>
             <div className="form-floating mb-3">
                 <input
                     type="email"
@@ -64,17 +76,17 @@ const login = () => {
                 <div className="col-6 d-grid gap-2">
                     <Link type="button" 
                     className="btn btn-secondary" 
-                    href="/users/register">
-                        Sign up
+                    href="/users">
+                        Login
                     </Link>
                 </div>
                 <div className="col-6 d-grid gap-2">
                     <button
                         type="button"
                         className="btn btn-success"
-                        onClick={() => clickLogin()}
+                        onClick={() => clickRegister()}
                     >
-                        Log in
+                        Save
                     </button>
                 </div>
             </div>
@@ -82,4 +94,4 @@ const login = () => {
     );
 };
 
-export default login;
+export default register;

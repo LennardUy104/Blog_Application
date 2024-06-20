@@ -6,7 +6,6 @@ import React from 'react'
 const navbar = () => {
  return (
  <>
-    <br/>
     <nav class="navbar fixed-top navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <Link class="navbar-brand" href="/">Blogs</Link>

@@ -5,7 +5,6 @@ const UsersPage = () => {
  return (
  <>
     <div className='center'>
-      <h1>Log In</h1>
       <Login/>
     </div>
  </>
