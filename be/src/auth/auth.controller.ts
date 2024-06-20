@@ -54,14 +54,13 @@ export class AuthController {
     }
 
     @UseInterceptors(ClassSerializerInterceptor)
-    @Get('users')
+    @Get('user')
     @UseGuards(AuthGuard)
     async getUsers(@Req() request: Request){
         const cookie = request.cookies['jwt']
 
         const {id} = await this.jwtService.verifyAsync(cookie) 
-        const user = await this.userService.getUser(id)
-        return user
+        return await this.userService.getUser(id)
     }
 
     @UseGuards(AuthGuard)

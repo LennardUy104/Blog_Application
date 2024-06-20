@@ -27,7 +27,7 @@ Simple Blog Application with user authentication.
 - /api/register, POST
 - /api/login, POST
 - /api/logout, POST
-- /api/users, GET
+- /api/user, GET
 
 ### User
 
