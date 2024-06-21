@@ -59,6 +59,11 @@ const navbar = () => {
                     <li class="nav-item">
                         <Link class="nav-link active" aria-current="page" href="/">Home</Link>
                     </li>
+                    {isLogin && (
+                        <li class="nav-item">
+                            <Link class="nav-link active" aria-current="page" href="/blog/createBlog">Create Blog</Link>
+                        </li>
+                    )}
                 </ul>
                 {isLogin ? (
                     <li class="nav-item dropdown">
