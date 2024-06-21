@@ -4,6 +4,7 @@ import Pagination from './component/pagination';
 
 export default function Home() {
   const [data, setData] = useState([]);
+  const [authorName , setAuthorName] = useState('')
   const [pagination, setPagination] = useState({
     total: 0,
     page: 1,
@@ -16,11 +17,19 @@ export default function Home() {
   }, []);
 
   const fetchData = async (pageNum) => {
-    const res = await fetch(`http://localhost:8000/api/blog?page=${pageNum}`);
-    const blogs = await res.json();
-    const { data, pagination } = blogs;
-    setData(data);
-    setPagination(pagination);
+    if(authorName != ''){
+      const res = await fetch(`http://localhost:8000/api/blog?page=${pageNum}&author=${authorName}`)
+      const blogs = await res.json()
+      const { data, pagination } = blogs;
+      setData(data);
+      setPagination(pagination);
+    }else {
+      const res = await fetch(`http://localhost:8000/api/blog?page=${pageNum}`);
+      const blogs = await res.json();
+      const { data, pagination } = blogs;
+      setData(data);
+      setPagination(pagination);
+    }
   };
 
   const handlePageChange = (pageNum) => {
@@ -30,17 +39,40 @@ export default function Home() {
   return (
     <main>
       <h1>Blogs</h1>
-      <Pagination handlePageChange={handlePageChange} totalPages={pagination.totalPages} />
-      <ul>
-        {data.map((blog) => (
-          <li key={blog.id}>
-            <h2>{blog.title}</h2>
-            <p>{blog.blog}</p>
-            <p>Author: {blog.user.name}</p>
-            <p>Created At: {blog.createdAt}</p>
-          </li>
-        ))}
-      </ul>
+      <div className='row'>
+        <div className='col'>
+          <Pagination handlePageChange={handlePageChange} totalPages={pagination.totalPages} />
+        </div>
+      </div>
+      <div className='row g-3 d-flex justify-content-center mb-4'>
+        <div className="col-auto">
+          <div className="input-group">
+            <input type="text" className="form-control" placeholder="Author" aria-label="Author" onChange={(e) => setAuthorName(e.target.value)} />
+            <button type="button" className="btn btn-outline-info" onClick={fetchData}>Search</button>
+          </div>
+        </div>
+      </div>
+
+      
+      {data.map((blog) => {
+        const truncate = (input) =>
+          input?.length > 20 ? `${input.substring(0, 19)}...` : input;
+
+        return (
+          <div className='d-flex justify-content-center mb-4'>
+            <div key={blog.id} className="card w-50" >
+              <div className="card-body">
+                <h5 className="card-title">{blog.title}</h5>
+                <p>Author: {blog.user.name}</p>
+                <p>Created At: {blog.createdAt}</p>
+                <p className="card-text">{truncate(blog.blog)}</p>
+                <a href="#" className="btn btn-primary">View</a>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+
       <Pagination handlePageChange={handlePageChange} totalPages={pagination.totalPages} />
     </main>
   );
