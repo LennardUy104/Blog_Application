@@ -39,7 +39,6 @@ export default function Home() {
 
   return (
     <main>
-      <h1>Blogs</h1>
       <div className='row'>
         <div className='col'>
           <Pagination handlePageChange={handlePageChange} totalPages={pagination.totalPages} />
@@ -52,6 +51,7 @@ export default function Home() {
             <button type="button" className="btn btn-outline-info" onClick={fetchData}>Search</button>
           </div>
         </div>
+        <h1 className='justify-content-center d-flex'>Blogs</h1>
       </div>
 
       

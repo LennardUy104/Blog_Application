@@ -66,15 +66,15 @@ const navbar = () => {
                     )}
                 </ul>
                 {isLogin ? (
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Profile
-                        </a>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Profile
+                        </button>
                         <ul class="dropdown-menu">
-                            <li><a className="navbar-brand" onClick={logout}>Logout</a></li>
-                            <li><Link className="navbar-brand" href="/">Profile</Link></li>
+                        <li><a class="dropdown-item"onClick={logout}>Logout</a></li>
+                        <li><Link class="dropdown-item"href="/">Profile</Link></li>
                         </ul>
-                    </li>
+                    </div>
                 ) : (
                     <Link class="navbar-brand" href="/users">Login</Link>            
                 )}
