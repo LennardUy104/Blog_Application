@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react';
 import Pagination from './component/pagination';
+import Link from 'next/link';
 
 export default function Home() {
   const [data, setData] = useState([]);
@@ -66,7 +67,7 @@ export default function Home() {
                 <p>Author: {blog.user.name}</p>
                 <p>Created At: {blog.createdAt}</p>
                 <p className="card-text">{truncate(blog.blog)}</p>
-                <a href="#" className="btn btn-primary">View</a>
+                <Link href={`/blog/${blog.id}`} className="btn btn-primary">View</Link>
               </div>
             </div>
           </div>
