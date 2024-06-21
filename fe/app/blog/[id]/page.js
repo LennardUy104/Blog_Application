@@ -1,26 +1,95 @@
+'use client'
+
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import Comment from '@/app/component/comment';
 
-
-export default async function BlogPage({ params }) {
+export default function BlogPage({ params }) {
   const { id } = params;
+  const [authUser, setAuthUser] = useState(null);
+  const [isLogin, setIsLogin] = useState(false);
+  const [blog, setBlog] = useState(null);
 
-  const res = await fetch(`http://localhost:8000/api/blog/${id}`, {
-    cache: 'no-store',
-  });
+  useEffect(() => {
+    getUser();
+    fetchBlog();
+  }, []);
 
-  if (!res.ok) {
-    notFound();
+  function getUser() {
+    fetch('http://localhost:8000/api/user', {
+      credentials: 'include',
+    })
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          console.log('Failed to fetch user. Status:', res.status);
+          setIsLogin(false);
+          throw new Error('Failed to fetch user');
+        }
+      })
+      .then(user => {
+        setAuthUser(user);
+        setIsLogin(true);
+      })
+      .catch(error => {
+        console.error('Failed to fetch user:', error);
+        setIsLogin(false);
+      });
   }
 
-  const blog = await res.json();
-  console.log(blog.comment);
+  function fetchBlog() {
+    fetch(`http://localhost:8000/api/blog/${id}`, {
+      cache: 'no-store',
+    })
+      .then(res => {
+        if (!res.ok) {
+          notFound();
+        }
+        return res.json();
+      })
+      .then(blogData => {
+        setBlog(blogData);
+      })
+      .catch(error => {
+        console.error('Failed to fetch blog:', error);
+      });
+  }
+
+  function post(comment) {
+    if (!authUser) return;
+    const authorId = authUser.id;
+    fetch('http://localhost:8000/api/comments', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id, authorId, comment }),
+      credentials: 'include',
+    })
+      .then(res => {
+        if (res.ok) {
+          window.location.reload();
+        } else {
+          return res.json().then(error => {
+            throw new Error('Error creating blog post: ' + JSON.stringify(error));
+          });
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+  if (!blog) return <div>Loading...</div>;
+
   return (
     <>
       <br/>
       <div className='row g-3 d-flex justify-content-center mb-4'>
         <div className="col-auto">
-          <Link href={'/'} type="button" class="btn btn-outline-secondary">Back</Link>       
+          <Link href={'/'} type="button" className="btn btn-outline-secondary">Back</Link>       
         </div>
       </div>
       
@@ -50,6 +119,13 @@ export default async function BlogPage({ params }) {
           </div>
         </div>
       ))}
+      {isLogin && (
+        <div className='row d-flex justify-content-center mb-4'>
+          <div className='col-6'>
+            <Comment onClickPost={post}/>
+          </div>
+        </div>
+      )}
     </>
   );
 }

@@ -26,7 +26,6 @@ const CreateBlog = () => {
     async function post(){
         getUser()
         const authorId = user.id 
-        console.log(user.id);
         const res = await fetch('http://localhost:8000/api/blog' , {
             method: 'POST',
             headers: {
