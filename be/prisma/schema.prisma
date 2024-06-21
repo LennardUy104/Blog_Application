@@ -36,9 +36,9 @@ model Blog{
 model Comment{
   id Int @id @default(autoincrement())
   authorId Int 
-  blogid Int 
+  blogId Int 
   comment String
   createdAt DateTime @default(now()) @db.Timestamp(6)
   user User @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  blog Blog @relation(fields: [blogid] , references: [id] , onDelete: NoAction , onUpdate: NoAction)
+  blog Blog @relation(fields: [blogId] , references: [id] , onDelete: NoAction , onUpdate: NoAction)
 }

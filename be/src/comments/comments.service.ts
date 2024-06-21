@@ -17,7 +17,7 @@ export class CommentsService {
 
     const has_blog = await this.prisma.blog.findUnique({
       where: {
-        id : createCommentDto.blogid,
+        id : createCommentDto.blogId,
       },
     });
 
@@ -25,11 +25,11 @@ export class CommentsService {
       throw new Error('Author does not exist');
     }
 
-    const { authorId, blogid , comment } = createCommentDto;
+    const { authorId, blogId , comment } = createCommentDto;
     return await this.prisma.comment.create({
       data: {
         authorId ,
-        blogid,
+        blogId,
         comment
       },
     });

@@ -83,7 +83,11 @@ export class BlogService {
       where: { id: Number( id ) } ,
       include: {
         user : true , 
-        comment : true
+        comment : {
+          include: {
+            user : true
+          }
+        }
       }
     })
   }

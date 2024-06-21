@@ -1,5 +1,5 @@
 export class CreateCommentDto {
     authorId: number;
-    blogid: number
+    blogId: number
     comment: string;
 }
