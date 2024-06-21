@@ -65,7 +65,7 @@ export default function Home() {
               <div className="card-body">
                 <h5 className="card-title">{blog.title}</h5>
                 <p>Author: {blog.user.name}</p>
-                <p>Created At: {blog.createdAt}</p>
+                <p>Created At: {new Date(blog.createdAt).toLocaleString()}</p>
                 <p className="card-text">{truncate(blog.blog)}</p>
                 <Link href={`/blog/${blog.id}`} className="btn btn-primary">View</Link>
               </div>
