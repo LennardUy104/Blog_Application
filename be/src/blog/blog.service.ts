@@ -92,6 +92,22 @@ export class BlogService {
     })
   }
 
+  async findBlogByAuthorId(id : number){
+    return await this.prisma.blog.findMany({
+      where: {
+        authorId : id
+      },
+      include: {
+        user: true , 
+        comment : {
+          include :{
+            user: true
+          }
+        }
+      }, 
+    })
+  }
+
   async update(id: number, updateBlogDto: UpdateBlogDto) {
     return await this.prisma.blog.update({
       where: { id : Number( id ) },

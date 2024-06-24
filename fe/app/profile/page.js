@@ -4,6 +4,25 @@ import React, { useEffect, useState } from 'react'
 const page = () => {
 
     const [user , setUser] = useState('')
+    const [blogs , setBlogs] = useState()
+    const [countBlog , setCountBlog] = useState(0)
+
+    async function blogUser(id){
+      try{
+        const res = await fetch(`http://localhost:8000/api/blog/userBlog/${id}` , {
+          credentials: `include`,
+        })
+        if(res.ok){
+          const blog = await res.json();
+          setBlogs(blog)
+          setCountBlog(blog.length)
+        }else {
+          console.log('Failed to fetch user. Status:', res.status);
+        }
+      }catch (error) {
+        console.error('Failed to fetch user:', error);
+      }
+    }
 
     async function getUser(){
         try {
@@ -13,6 +32,7 @@ const page = () => {
       
             if (res.ok) {
               const user = await res.json();
+              blogUser(user.id)
               setUser(user);
             } else {
               console.log('Failed to fetch user. Status:', res.status);
@@ -22,6 +42,8 @@ const page = () => {
           }
     }
 
+
+
     useEffect(() => {
         getUser();
       }, []);
@@ -29,6 +51,7 @@ const page = () => {
  return (
  <>
     <div className='container text-center'>
+      <br/>
         <h1>Profile</h1>
         <div className='row'>
             <p>Name: {user.name}</p>
@@ -36,6 +59,25 @@ const page = () => {
         <div className='row'>
             <p>email: {user.email}</p>
         </div>
+        <p>Blogs made: {countBlog}</p>          
+          {countBlog === 0 ? (
+            <p>No blogs made</p>
+          ) : (
+            blogs.map((blog) => {
+              return (
+                <div key={blog.id} className='d-flex justify-content-center mb-4'>
+                  <div className="card w-50">
+                    <div className="card-body">
+                      <h5 className="card-title">{blog.title}</h5>
+                      <p>Author: {blog.user.name}</p>
+                      <p>Created At: {new Date(blog.createdAt).toLocaleString()}</p>
+                      <p className="card-text">{blog.blog}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          )}
     </div>
  </>
  )

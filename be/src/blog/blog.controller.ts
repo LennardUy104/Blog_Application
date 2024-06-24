@@ -13,9 +13,14 @@ export class BlogController {
   }
 
   @Get()
-findAll(@Query('page') page?: number, @Query('author') author?: string) {
-  return this.blogService.findAll(Number(page), author || undefined);
-}
+  findAll(@Query('page') page?: number, @Query('author') author?: string) {
+    return this.blogService.findAll(Number(page), author || undefined);
+  }
+
+  @Get('userBlog/:id')
+  findUserBlog(@Param('id') id: string){
+    return this.blogService.findBlogByAuthorId(+id)
+  }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
