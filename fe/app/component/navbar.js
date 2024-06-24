@@ -72,7 +72,7 @@ const navbar = () => {
                         </button>
                         <ul class="dropdown-menu">
                         <li><a class="dropdown-item"onClick={logout}>Logout</a></li>
-                        <li><Link class="dropdown-item"href="/">Profile</Link></li>
+                        <li><Link class="dropdown-item"href="/profile">Profile</Link></li>
                         </ul>
                     </div>
                 ) : (
