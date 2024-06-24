@@ -23,6 +23,25 @@ const page = () => {
         console.error('Failed to fetch user:', error);
       }
     }
+    
+    async function deleteBlog(id) {
+      try {
+        const response = await fetch(`http://localhost:8000/api/blog/${id}`, {
+          method: 'DELETE',
+        });
+    
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        alert('Blog deleted successfully!');
+        window.location.reload()
+        return data;
+      } catch (error) {
+        console.error('Error deleting item:', error);
+        return false;
+      }
+    }
 
     async function getUser(){
         try {
@@ -72,6 +91,7 @@ const page = () => {
                       <p>Author: {blog.user.name}</p>
                       <p>Created At: {new Date(blog.createdAt).toLocaleString()}</p>
                       <p className="card-text">{blog.blog}</p>
+                      <button type="button" class="btn btn-danger" onClick={() => deleteBlog(blog.id)}>Delete</button>                
                     </div>
                   </div>
                 </div>

@@ -12,7 +12,7 @@ const pagination = (props) => {
             <ul class="pagination justify-content-center">
                 {pages.map((page) => (
                     <li class="page-item">
-                      <button class="page-link" key={page} onClick={() => props.handlePageChange(page)}>
+                      <button class="page-link" onClick={() => props.handlePageChange(page)}>
                       {page}
                       </button>
                     </li>
