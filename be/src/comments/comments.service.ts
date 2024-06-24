@@ -9,29 +9,37 @@ export class CommentsService {
   constructor(private prisma: PrismaService){}  
 
   async create(createCommentDto: CreateCommentDto) {
-    const has_author = await this.prisma.user.findUnique({
-      where: {
-        id: createCommentDto.authorId,
-      },
-    });
+    const { authorId, blogId, comment } = createCommentDto;
+  
 
-    const has_blog = await this.prisma.blog.findUnique({
-      where: {
-        id : createCommentDto.blogId,
-      },
-    });
+    const numericAuthorId = typeof authorId === 'string' ? parseInt(authorId, 10) : authorId;
+    const numericBlogId = typeof blogId === 'string' ? parseInt(blogId, 10) : blogId;
+  
 
-    if (!has_author || !has_blog) {
+    const [has_author, has_blog] = await Promise.all([
+      this.prisma.user.findUnique({ where: { id: numericAuthorId } }),
+      this.prisma.blog.findUnique({ where: { id: numericBlogId } })
+    ]);
+  
+    if (!has_author) {
       throw new Error('Author does not exist');
     }
+  
+    if (!has_blog) {
+      throw new Error('Blog does not exist');
+    }
+  
 
-    const { authorId, blogId , comment } = createCommentDto;
     return await this.prisma.comment.create({
       data: {
-        authorId ,
-        blogId,
-        comment
+        comment,
+        user: { connect: { id: numericAuthorId } },
+        blog: { connect: { id: numericBlogId } }
       },
+      include: {
+        user: true,
+        blog: true
+      }
     });
   }
 

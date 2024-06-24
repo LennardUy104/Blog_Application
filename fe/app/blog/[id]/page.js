@@ -60,21 +60,21 @@ export default function BlogPage({ params }) {
   function post(comment) {
     if (!authUser) return;
     const authorId = authUser.id;
+    const blogId = Number(id)
     fetch('http://localhost:8000/api/comments', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id, authorId, comment }),
+      body: JSON.stringify({ blogId , authorId, comment }),
       credentials: 'include',
     })
-      .then(res => {
+      .then(async res => {
         if (res.ok) {
           window.location.reload();
         } else {
-          return res.json().then(error => {
-            throw new Error('Error creating blog post: ' + JSON.stringify(error));
-          });
+          const error = await res.json();
+          throw new Error('Error creating blog post: ' + JSON.stringify(error));
         }
       })
       .catch(error => {

@@ -54,25 +54,34 @@ export default function Home() {
         <h1 className='justify-content-center d-flex'>Blogs</h1>
       </div>
 
-      
-      {data.map((blog) => {
-        const truncate = (input) =>
-          input?.length > 20 ? `${input.substring(0, 19)}...` : input;
-
-        return (
-          <div className='d-flex justify-content-center mb-4'>
-            <div key={blog.id} className="card w-50" >
-              <div className="card-body">
-                <h5 className="card-title">{blog.title}</h5>
-                <p>Author: {blog.user.name}</p>
-                <p>Created At: {new Date(blog.createdAt).toLocaleString()}</p>
-                <p className="card-text">{truncate(blog.blog)}</p>
-                <Link href={`/blog/${blog.id}`} className="btn btn-primary">View</Link>
-              </div>
-            </div>
+      {data.length === 0 ? (
+  <div className='d-flex justify-content-center mb-4'>
+    <div className="card w-50">
+      <div className="card-body text-center">
+        <h5 className="card-title">No blogs found</h5>
+      </div>
+    </div>
+  </div>
+) : (
+  data.map((blog) => {
+    const truncate = (input) =>
+      input?.length > 20 ? `${input.substring(0, 19)}...` : input;
+    
+    return (
+      <div key={blog.id} className='d-flex justify-content-center mb-4'>
+        <div className="card w-50">
+          <div className="card-body">
+            <h5 className="card-title">{blog.title}</h5>
+            <p>Author: {blog.user.name}</p>
+            <p>Created At: {new Date(blog.createdAt).toLocaleString()}</p>
+            <p className="card-text">{truncate(blog.blog)}</p>
+            <Link href={`/blog/${blog.id}`} className="btn btn-primary">View</Link>
           </div>
-        );
-      })}
+        </div>
+      </div>
+    );
+  })
+)}
 
       <Pagination handlePageChange={handlePageChange} totalPages={pagination.totalPages} />
     </main>
