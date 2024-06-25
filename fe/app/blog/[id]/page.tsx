@@ -3,7 +3,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import Comment from '@/app/component/comment';
+import Comment from '../../component/comment';
 
 export default function BlogPage({ params }) {
   const { id } = params;

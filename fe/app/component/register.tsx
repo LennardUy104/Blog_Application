@@ -1,7 +1,6 @@
 'use client'
 import Link from 'next/link';
 import React, { useState } from 'react'
-import { redirect } from 'next/navigation'
 
 const register = () => {
     const [name , setName] = useState('')
