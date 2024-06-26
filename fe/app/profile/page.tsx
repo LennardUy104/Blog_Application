@@ -1,11 +1,13 @@
 'use client'
 import React, { useEffect, useState } from 'react'
+import UpdateForm from '../component/updateForm'
 
 const page = () => {
 
     const [user , setUser] = useState('')
     const [blogs , setBlogs] = useState()
     const [countBlog , setCountBlog] = useState(0)
+    const [updateUserMode , setUpdateUserMode] = useState(false)
 
     async function blogUser(id){
       try{
@@ -21,6 +23,38 @@ const page = () => {
         }
       }catch (error) {
         console.error('Failed to fetch user:', error);
+      }
+    }
+
+    async function update(updatedData) {
+      try{
+        const res = await fetch(`http://localhost:8000/api/user/users/${user.id}`, {
+          credentials: `include`, 
+          method: `PUT`,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedData),
+        });
+        if(res.ok){
+          setUpdateUserMode(false)
+          window.location.reload()
+        }else {
+          console.log("EROORRR");
+          
+        }
+       
+      }catch(e){
+        console.log("eroorrr" , e);
+        
+      }
+    }
+
+    function UpdateBtn(){
+      if(updateUserMode){
+        setUpdateUserMode(false)
+      }else{
+        setUpdateUserMode(true)
       }
     }
     
@@ -61,8 +95,6 @@ const page = () => {
           }
     }
 
-
-
     useEffect(() => {
         getUser();
       }, []);
@@ -71,33 +103,49 @@ const page = () => {
  <>
     <div className='container text-center'>
       <br/>
-        <h1>Profile</h1>
-        <div className='row'>
-            <p>Name: {user.name}</p>
-        </div>
-        <div className='row'>
-            <p>email: {user.email}</p>
-        </div>
-        <p>Blogs made: {countBlog}</p>          
-          {countBlog === 0 ? (
-            <p>No blogs made</p>
-          ) : (
-            blogs.map((blog) => {
-              return (
-                <div key={blog.id} className='d-flex justify-content-center mb-4'>
-                  <div className="card w-50">
-                    <div className="card-body">
-                      <h5 className="card-title">{blog.title}</h5>
-                      <p>Author: {blog.user.name}</p>
-                      <p>Created At: {new Date(blog.createdAt).toLocaleString()}</p>
-                      <p className="card-text">{blog.blog}</p>
-                      <button type="button" class="btn btn-danger" onClick={() => deleteBlog(blog.id)}>Delete</button>                
-                    </div>
-                  </div>
+      <div className='d-flex justify-content-center mb-4'>
+        <div className="card w-50">
+          <div className="card-body">
+            {!updateUserMode ? (
+              <>
+                <h1>Profile</h1>
+                <div className='row'>
+                    <p>Name: {user.name}</p>
                 </div>
-              );
-            })
-          )}
+                <div className='row'>
+                    <p>email: {user.email}</p>
+                </div>
+                <button type='button' className='btn btn-info' onClick={UpdateBtn}>Update</button>
+              </>
+            ) : (
+              <UpdateForm
+                initialData={{ name: user.name , email: user.email }}
+                onSubmit={update}
+              />
+            )}
+          </div>
+        </div>
+      </div>
+      <p>Blogs made: {countBlog}</p>          
+      {countBlog === 0 ? (
+        <p>No blogs made</p>
+      ) : (
+        blogs.map((blog) => {
+          return (
+            <div key={blog.id} className='d-flex justify-content-center mb-4'>
+              <div className="card w-50">
+                <div className="card-body">
+                  <h5 className="card-title">{blog.title}</h5>
+                  <p>Author: {blog.user.name}</p>
+                  <p>Created At: {new Date(blog.createdAt).toLocaleString()}</p>
+                  <p className="card-text">{blog.blog}</p>
+                  <button type="button" className="btn btn-danger" onClick={() => deleteBlog(blog.id)}>Delete</button>                
+                </div>
+              </div>
+            </div>
+          );
+        })
+      )}
     </div>
  </>
  )
